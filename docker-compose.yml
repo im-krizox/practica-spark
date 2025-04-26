@@ -20,16 +20,6 @@ services:
     ports:
       - "8081:8081"
 
-  zeppelin:
-    image: apache/zeppelin:0.10.0
-    container_name: zeppelin
-    ports:
-      - "8082:8080"
-    environment:
-      - ZEPPELIN_ADDR=0.0.0.0
-    depends_on:
-      - spark-master
-
   jupyter:
     image: jupyter/pyspark-notebook
     container_name: jupyter
