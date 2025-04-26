@@ -29,37 +29,65 @@ Los datos requieren estandarización en varios aspectos:
    - Aplicar transformaciones para corregir caracteres especiales
 
 2. **Estandarización de Datos**
-   ```python
-    import pandas as pd
-    import unicodedata
-    import re
+    ```python
+    from pyspark.sql import SparkSession
+    from pyspark.sql.functions import col, regexp_replace
+    from pyspark.sql.types import StringType
 
-    def eliminar_acentos(texto):
-        # Convertir el texto a formato NFD donde los caracteres acentuados
-        # se separan en la letra base y el acento
-        texto_nfd = unicodedata.normalize('NFD', str(texto))
-        
-        # Eliminar todos los caracteres que son marcas diacríticas (acentos)
-        texto_sin_acentos = ''.join([c for c in texto_nfd if not unicodedata.combining(c)])
-        
-        # Para el caso específico de la ñ, la reemplazamos por n
-        texto_sin_enye = re.sub(r'[Ññ]', 'n', texto_sin_acentos)
-        
-        return texto_sin_enye
+    # Crear sesión de Spark
+    spark = SparkSession.builder.appName("LimpiezaMetro").getOrCreate()
 
     # Leer el archivo CSV
-    # Reemplaza 'tu_archivo.csv' con el nombre de tu archivo
-    df = pd.read_csv('tu_archivo.csv')
+    df = spark.read.csv("afluencia-metro.csv", header=True, inferSchema=True)
 
-    # Aplicar la función a todas las columnas de tipo string
-    for columna in df.select_dtypes(include=['object']).columns:
-        df[columna] = df[columna].apply(eliminar_acentos)
+    # Función para corregir la codificación de caracteres
+    def corregir_codificacion(df, column_name):
+        return df.withColumn(column_name,
+            regexp_replace(
+                regexp_replace(
+                    regexp_replace(
+                        regexp_replace(
+                            regexp_replace(
+                                regexp_replace(
+                                    regexp_replace(
+                                        regexp_replace(
+                                            regexp_replace(
+                                                regexp_replace(
+                                                    col(column_name),
+                                                        "Ã³", "ó"),
+                                                    "Ã¡", "á"),
+                                                "Ã­", "í"),
+                                            "Ã©", "é"),
+                                        "Ãº", "ú"),
+                                    "Ã±", "ñ"),
+                                "Ã±", "ñ"),
+                            "Ã", "í"),
+                        "Ã", "á"),
+                    "Ã", "ó")
+        )
 
-    # Guardar el resultado en un nuevo archivo CSV
-    df.to_csv('archivo_limpio.csv', index=False)
+    # Aplicar la corrección a la columna de estaciones
+    df_corregido = corregir_codificacion(df, "estacion")
 
-    print("Proceso completado. Archivo limpio guardado como 'archivo_limpio.csv'")
-   ```
+    # Guardar el resultado
+    df_corregido.write.csv("afluencia-metro-corregido.csv", header=True)
+    ```
+
+   Este código:
+   1. Crea una sesión de Spark
+   2. Lee el archivo CSV original
+   3. Define una función que corrige los caracteres mal codificados
+   4. Aplica la corrección a la columna de estaciones
+   5. Guarda el resultado en un nuevo archivo
+
+   Los caracteres que se corrigen son:
+   - "Ã³" → "ó"
+   - "Ã¡" → "á"
+   - "Ã­" → "í"
+   - "Ã©" → "é"
+   - "Ãº" → "ú"
+   - "Ã±" → "ñ"
+   - "Ã" → "í", "á", "ó" (según el contexto)
 
 3. **Validación de Datos**
    - Verificar que todos los nombres de estaciones sean legibles
@@ -87,12 +115,3 @@ Los datos requieren estandarización en varios aspectos:
 
 1. Implementar las transformaciones necesarias usando PySpark
 2. Validar los resultados de la limpieza
-3. Documentar las transformaciones realizadas
-4. Crear un conjunto de datos limpio para el análisis posterior
-
-## Consideraciones Adicionales
-
-- Mantener una copia del dataset original como respaldo
-- Documentar todos los cambios realizados
-- Implementar pruebas para verificar la calidad de los datos limpios
-- Considerar la automatización del proceso para futuros datasets similares
