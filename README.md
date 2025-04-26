@@ -12,15 +12,13 @@ Este proyecto forma parte del curso de **Programación Paralela y Concurrente** 
 ## Tecnologías Utilizadas
 
 - **Apache Spark**: Framework para procesamiento distribuido.
-- **Scala/Python**: Lenguajes de programación para la implementación de los algoritmos.
-- **Hadoop HDFS**: Sistema de archivos distribuido para almacenamiento de datos (opcional).
-- **Jupyter Notebooks**: Para experimentación y visualización de resultados (opcional).
+- **Python**: Lenguaje de programación para la implementación de los algoritmos.
+- **Jupyter Notebooks**: Para experimentación y visualización de resultados.
 
 ## Estructura del Proyecto
 
 - `src/`: Código fuente de las implementaciones.
 - `data/`: Conjunto de datos utilizados para las pruebas.
-- `notebooks/`: Notebooks para análisis y visualización (si aplica).
 - `docs/`: Documentación adicional del proyecto.
 - `results/`: Resultados obtenidos de las ejecuciones.
 
@@ -34,7 +32,7 @@ Este proyecto forma parte del curso de **Programación Paralela y Concurrente** 
 
 1. Clonar el repositorio:
     ```bash
-    git clone <URL-del-repositorio>
+    git clone <git@github.com:im-krizox/practica-spark.git>
     cd practica-spark
     ```
 2. Configurar el entorno de ejecución (Spark, dependencias, etc.).
