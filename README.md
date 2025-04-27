@@ -32,7 +32,7 @@ Este proyecto forma parte del curso de **Programación Paralela y Concurrente** 
 
 1. Clonar el repositorio:
     ```bash
-    git clone <git@github.com:im-krizox/practica-spark.git>
+    git clone git@github.com:im-krizox/practica-spark.git
     cd practica-spark
     ```
 2. Configurar el entorno de ejecución (Spark, dependencias, etc.).
