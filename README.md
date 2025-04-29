@@ -21,6 +21,7 @@ Este proyecto forma parte del curso de **Programación Paralela y Concurrente** 
 - `data/`: Conjunto de datos utilizados para las pruebas.
 - `docs/`: Documentación adicional del proyecto.
 - `results/`: Resultados obtenidos de las ejecuciones.
+- `Reporte.pdf`: Reporte de la práctica en formato PDF.
 
 ## Requisitos Previos
 
